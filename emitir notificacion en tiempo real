@@ -1,0 +1,45 @@
+index.html
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Notificaciones en tiempo real con Socket.IO</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    // Manejar evento de notificación
+    socket.on('notificationfff', (message) => {
+      // Mostrar la notificación en la página
+      const notificationElement = document.createElement('div');
+      notificationElement.textContent = message;
+      document.body.appendChild(notificationElement);
+    });
+  </script>
+</head>
+<body>
+  <h1>Notificaciones en tiempo real</h1>
+</body>
+</html>
+
+========================================================================================
+server.js
+const express = require('express');
+const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+
+// Configurar el servidor HTTP
+app.use(express.static(__dirname + '/public'));
+
+// Enviar notificación cada 5 segundos
+setInterval(() => {
+  let notificationMessage = 'Nueva notificación en tiempo real';
+  io.emit('notificationfff', notificationMessage);
+}, 5000);
+
+// Iniciar el servidor
+const port = 3000;
+server.listen(port, () => {
+  console.log(`Servidor escuchando en el puerto ${port}`);
+});
